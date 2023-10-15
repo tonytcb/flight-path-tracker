@@ -1,0 +1,11 @@
+FROM golang:1.21-bullseye
+
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download
+
+RUN go build -o /flight-path-tracker ./cmd/main.go
+
+ENTRYPOINT [ "/flight-path-tracker" ]
