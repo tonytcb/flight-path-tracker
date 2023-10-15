@@ -1,3 +1,5 @@
+[![CI](https://github.com/tonytcb/flight-path-tracker/actions/workflows/makefile.yml/badge.svg)](https://github.com/tonytcb/flight-path-tracker/actions/workflows/makefile.yml)
+
 # Flight Path Tracker App
 
 The goal of this project is design a Golang application serving an HTTP API to return the person's original flight path, given a list of flights.
