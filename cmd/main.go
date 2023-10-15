@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/tonytcb/flight-path-tracker/pkg/api/http"
@@ -12,13 +13,21 @@ import (
 	"github.com/tonytcb/flight-path-tracker/pkg/usecase"
 )
 
-func main() {
-	const httpPort = 8080
+const (
+	httpPortEnVarName = "HTTP_PORT"
+	httpPortDefault   = 8080
+)
 
+func main() {
 	log.Println("Starting application")
 
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+
+	httpPort, err := loadEnvVarInt(httpPortEnVarName, httpPortDefault)
+	if err != nil {
+		log.Fatalf("error to load env var %s: %v", httpPortEnVarName, err)
+	}
 
 	var (
 		flightsCalculatorHandler = http.NewFlightCalculatorHandler(
@@ -30,7 +39,7 @@ func main() {
 		)
 	)
 
-	if err := httpServer.Start(httpPort); err != nil {
+	if err = httpServer.Start(httpPort); err != nil {
 		log.Fatalf(err.Error())
 	}
 
@@ -41,4 +50,17 @@ func main() {
 	}
 
 	log.Println("Shutting down application")
+}
+
+func loadEnvVarInt(keyName string, defaultValue int) (int, error) {
+	if v := os.Getenv(keyName); v != "" {
+		intValue, err := strconv.Atoi(v)
+		if err != nil {
+			return 0, err
+		}
+
+		return intValue, nil
+	}
+
+	return defaultValue, nil
 }
