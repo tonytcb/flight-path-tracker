@@ -9,6 +9,10 @@ type Flight struct {
 	Destination Airport
 }
 
+func NewFlight(source Airport, destination Airport) *Flight {
+	return &Flight{Source: source, Destination: destination}
+}
+
 func (f Flights) OriginalSourceAndDestination() (*Flight, error) {
 	if len(f) == 0 {
 		return nil, ErrEmptyFlightsList

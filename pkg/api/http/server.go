@@ -37,7 +37,7 @@ func (s *Server) Start(port int) error {
 
 	go func() {
 		if err := s.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Printf("error to listen and server http api: %v", err)
+			log.Printf("error to listen and serve http api: %v", err)
 		}
 	}()
 
@@ -55,5 +55,5 @@ func (s *Server) Stop(ctx context.Context) error {
 }
 
 func (s *Server) healthHandler(w http.ResponseWriter, _ *http.Request) {
-	fmt.Fprintln(w, "ok")
+	fmt.Fprintln(w, "OK")
 }

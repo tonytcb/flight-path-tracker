@@ -2,27 +2,61 @@ package http
 
 import (
 	"context"
-	"fmt"
+	"io"
 	"net/http"
+	"time"
+
+	"github.com/tonytcb/flight-path-tracker/pkg/domain"
 )
 
-type FlightCalculator interface {
-	Parse(context.Context) error
+const (
+	timeoutDefault = 10 * time.Second
+)
+
+type FlightsTracker interface {
+	Track(context.Context, domain.Flights) (*domain.Flight, error)
+}
+
+type FlightsParser interface {
+	Parse(context.Context, []byte) (domain.Flights, error)
 }
 
 type FlightCalculatorHandler struct {
-	calculator FlightCalculator
+	parser  FlightsParser
+	tracker FlightsTracker
 }
 
-func NewFlightCalculator(
-	calculator FlightCalculator,
+func NewFlightCalculatorHandler(
+	parser FlightsParser,
+	tracker FlightsTracker,
 ) *FlightCalculatorHandler {
-	return &FlightCalculatorHandler{calculator: calculator}
+	return &FlightCalculatorHandler{parser: parser, tracker: tracker}
 }
 
 func (h *FlightCalculatorHandler) Handle(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	ctx, cancel := context.WithTimeout(r.Context(), timeoutDefault)
+	defer cancel()
 
-	//w.Write([]byte("wip"))
-	fmt.Fprintln(w, "wip")
+	var output = jsonOutput{w: w}
+
+	rawBody, err := io.ReadAll(r.Body)
+	if err != nil {
+		_ = output.internalServerError(err, "error to read body")
+		return
+	}
+	defer r.Body.Close()
+
+	flights, err := h.parser.Parse(ctx, rawBody)
+	if err != nil {
+		_ = output.badRequest(err, "error to parse json body")
+		return
+	}
+
+	flightResponse, err := h.tracker.Track(ctx, flights)
+	if err != nil {
+		_ = output.domainError(err, "error to calculate original flight")
+		return
+	}
+
+	_ = output.ok(flightResponse)
 }

@@ -8,6 +8,8 @@ import (
 	"syscall"
 
 	"github.com/tonytcb/flight-path-tracker/pkg/api/http"
+	"github.com/tonytcb/flight-path-tracker/pkg/infra/flightparser"
+	"github.com/tonytcb/flight-path-tracker/pkg/usecase"
 )
 
 func main() {
@@ -19,7 +21,13 @@ func main() {
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
 	var (
-		httpServer = http.NewServer(nil)
+		flightsCalculatorHandler = http.NewFlightCalculatorHandler(
+			flightparser.NewJSONParser(),
+			usecase.NewFlightTracker(),
+		)
+		httpServer = http.NewServer(
+			flightsCalculatorHandler,
+		)
 	)
 
 	if err := httpServer.Start(httpPort); err != nil {

@@ -75,7 +75,8 @@ func TestJSONParser_Parse(t *testing.T) {
 		tt := tt
 
 		t.Run(tt.name, func(t *testing.T) {
-			p := &JSONParser{}
+			p := NewJSONParser()
+
 			got, err := p.Parse(tt.args.ctx, tt.args.raw)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)

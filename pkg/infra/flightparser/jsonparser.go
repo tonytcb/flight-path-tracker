@@ -12,6 +12,10 @@ import (
 type JSONParser struct {
 }
 
+func NewJSONParser() *JSONParser {
+	return &JSONParser{}
+}
+
 func (p *JSONParser) Parse(ctx context.Context, raw []byte) (domain.Flights, error) {
 	type flight struct {
 		Source      string `json:"source"`
