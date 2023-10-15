@@ -10,5 +10,5 @@ services:
 
   test:
     build:
-      dockerfile: ./Dockerfile.test
+      dockerfile: Dockerfile.unittest
       context: .
