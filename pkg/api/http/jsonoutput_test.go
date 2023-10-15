@@ -154,6 +154,6 @@ func assertHTTPResponse(t *testing.T, response *http.Response, expectedStatusCod
 	}
 
 	if response.StatusCode != expectedStatusCode {
-		t.Errorf("Payload response does not match, got=%d expected=%d", response.StatusCode, expectedStatusCode)
+		t.Errorf("Status code does not match, got=%d expected=%d", response.StatusCode, expectedStatusCode)
 	}
 }

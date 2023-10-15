@@ -13,6 +13,8 @@ const (
 	timeoutDefault = 10 * time.Second
 )
 
+//go:generate mockgen -source=calculatehandler.go -destination=mock_calculatehandler_test.go -package=http FlightsTracker,FlightsParser
+
 type FlightsTracker interface {
 	Track(context.Context, domain.Flights) (*domain.Flight, error)
 }
@@ -38,6 +40,11 @@ func (h *FlightCalculatorHandler) Handle(w http.ResponseWriter, r *http.Request)
 	defer cancel()
 
 	var output = jsonOutput{w: w}
+
+	if r.Method != http.MethodPost {
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		return
+	}
 
 	rawBody, err := io.ReadAll(r.Body)
 	if err != nil {
