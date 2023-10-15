@@ -62,3 +62,11 @@ As a performant algorithm, it runs on a linear time complexity, O(n).
 - `make help` to see all commands;
 - `make up` to starts the app serving the http api;
 - `make test` to run all tests.
+
+## TODO Improvements
+
+- [ ] validate corner cases: today the api validation is pretty simple, validating only non-empty and duplicated flights
+- [ ] flights data generator: implement a function returning a huge list of flights
+- [ ] benchmark: would be a good improvement running a benchmark to evaluate the current algorithm, and compare with future changes.
+
+ 
