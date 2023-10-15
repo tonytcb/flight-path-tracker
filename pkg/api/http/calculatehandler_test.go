@@ -170,6 +170,7 @@ func TestFlightCalculatorHandler_Handle(t *testing.T) {
 
 			if v, ok := tt.args.responseWriter.(*httptest.ResponseRecorder); ok {
 				httpResponse := v.Result()
+				defer httpResponse.Body.Close()
 
 				assertHTTPResponse(t, httpResponse, tt.wantStatusCode, tt.wantResponseBody)
 

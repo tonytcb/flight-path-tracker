@@ -4,6 +4,13 @@ linters:
     - godot
     - cyclop
     - gomnd
+    - bodyclose
+    - unused
+    - gochecknoglobals
+    - gocritic
+    - gofmt
+    - goimports
+    - revive
 
 linters-settings:
   cyclop:

@@ -32,7 +32,10 @@ func Test_jsonOutput_ok(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	assertHTTPResponse(t, responseWriter.Result(), expectedStatusCode, expectedPayload)
+	response := responseWriter.Result()
+	defer response.Body.Close()
+
+	assertHTTPResponse(t, response, expectedStatusCode, expectedPayload)
 }
 
 func Test_jsonOutput_internalServerError(t *testing.T) {
@@ -50,7 +53,10 @@ func Test_jsonOutput_internalServerError(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	assertHTTPResponse(t, responseWriter.Result(), expectedStatusCode, expectedPayload)
+	response := responseWriter.Result()
+	defer response.Body.Close()
+
+	assertHTTPResponse(t, response, expectedStatusCode, expectedPayload)
 }
 
 func Test_jsonOutput_badRequest(t *testing.T) {
@@ -68,7 +74,10 @@ func Test_jsonOutput_badRequest(t *testing.T) {
 		t.Fatalf(err.Error())
 	}
 
-	assertHTTPResponse(t, responseWriter.Result(), expectedStatusCode, expectedPayload)
+	response := responseWriter.Result()
+	defer response.Body.Close()
+
+	assertHTTPResponse(t, response, expectedStatusCode, expectedPayload)
 }
 
 func Test_jsonOutput_domainError(t *testing.T) {
@@ -136,9 +145,10 @@ func Test_jsonOutput_domainError(t *testing.T) {
 				t.Fatalf(err.Error())
 			}
 
-			responseWriter := tt.fields.responseWriter
+			response := tt.fields.responseWriter.Result()
+			defer response.Body.Close()
 
-			assertHTTPResponse(t, responseWriter.Result(), tt.wantStatusCode, tt.wantResponseBody)
+			assertHTTPResponse(t, response, tt.wantStatusCode, tt.wantResponseBody)
 		})
 	}
 }
