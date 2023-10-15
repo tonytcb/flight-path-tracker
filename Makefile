@@ -20,6 +20,11 @@ clean:
 test:
 	docker-compose run test
 
+## unit-test-ci: runs all tests on CI, with no Docker
+unit-test-ci:
+	@go generate
+	@go test -v -race ./...
+
 ## lint: runs linter for a given directory, specified via PACKAGE variable
 lint:
 	@ if [ -z "$(PACKAGE)" ]; then echo >&2 please set directory via variable PACKAGE; exit 2; fi
