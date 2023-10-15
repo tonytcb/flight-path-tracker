@@ -2,16 +2,16 @@ package domain
 
 import "github.com/pkg/errors"
 
-type Flights []Flight
+type Flights []*Flight
 
 type Flight struct {
 	Source      Airport
 	Destination Airport
 }
 
-func (f Flights) OriginalSourceAndDestination() (Flight, error) {
+func (f Flights) OriginalSourceAndDestination() (*Flight, error) {
 	if len(f) == 0 {
-		return Flight{}, ErrEmptyFlightsList
+		return nil, ErrEmptyFlightsList
 	}
 
 	var (
@@ -23,11 +23,11 @@ func (f Flights) OriginalSourceAndDestination() (Flight, error) {
 
 	for _, v := range f {
 		if _, ok := allSources[v.Source]; ok {
-			return Flight{}, errors.Wrapf(ErrInvalidItinerary, "'%v' source appears more than once in the sources", v.Source)
+			return nil, errors.Wrapf(ErrInvalidItinerary, "'%v' source appears more than once in the sources", v.Source)
 		}
 
 		if _, ok := allDestinations[v.Destination]; ok {
-			return Flight{}, errors.Wrapf(ErrInvalidItinerary, "'%v' destination appears more than once in the destinations", v.Source)
+			return nil, errors.Wrapf(ErrInvalidItinerary, "'%v' destination appears more than once in the destinations", v.Source)
 		}
 
 		allSources[v.Source] = struct{}{}
@@ -46,11 +46,7 @@ func (f Flights) OriginalSourceAndDestination() (Flight, error) {
 		}
 	}
 
-	if initialSource == "" || finalDestination == "" {
-		return Flight{}, ErrInvalidItinerary
-	}
-
-	return Flight{
+	return &Flight{
 		Source:      initialSource,
 		Destination: finalDestination,
 	}, nil

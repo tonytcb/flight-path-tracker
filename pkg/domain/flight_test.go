@@ -13,18 +13,18 @@ func TestFlights_OriginalSourceAndDestination(t *testing.T) {
 	tests := []struct {
 		name    string
 		flights Flights
-		want    Flight
+		want    *Flight
 		wantErr error
 	}{
 		{
 			name:    "should error when there are no flights",
-			flights: []Flight{},
-			want:    Flight{},
+			flights: []*Flight{},
+			want:    nil,
 			wantErr: ErrEmptyFlightsList,
 		},
 		{
 			name: "should error when the itinerary is invalid",
-			flights: []Flight{
+			flights: []*Flight{
 				{
 					Source:      "SFO",
 					Destination: "EWR",
@@ -34,26 +34,43 @@ func TestFlights_OriginalSourceAndDestination(t *testing.T) {
 					Destination: "EWR",
 				},
 			},
-			want:    Flight{},
+			want:    nil,
 			wantErr: ErrInvalidItinerary,
 		},
 		{
 			name: "should return EWR when there's only one flight",
-			flights: []Flight{
+			flights: []*Flight{
 				{
 					Source:      "SFO",
 					Destination: "EWR",
 				},
 			},
-			want: Flight{
+			want: &Flight{
 				Source:      "SFO",
 				Destination: "EWR",
 			},
 		},
 		{
-			name:    "should return EWR when there are 4 flights flight",
-			flights: fourFlightsTestCase(),
-			want: Flight{
+			name: "should return EWR when there are 4 flights flight",
+			flights: []*Flight{
+				{
+					Source:      "IND",
+					Destination: "EWR",
+				},
+				{
+					Source:      "SFO",
+					Destination: "ATL",
+				},
+				{
+					Source:      "GSO",
+					Destination: "IND",
+				},
+				{
+					Source:      "ATL",
+					Destination: "GSO",
+				},
+			},
+			want: &Flight{
 				Source:      "SFO",
 				Destination: "EWR",
 			},
@@ -74,26 +91,5 @@ func TestFlights_OriginalSourceAndDestination(t *testing.T) {
 				t.Errorf("OriginalSourceAndDestination() got = %v, want %v", got, tt.want)
 			}
 		})
-	}
-}
-
-func fourFlightsTestCase() Flights {
-	return []Flight{
-		{
-			Source:      "IND",
-			Destination: "EWR",
-		},
-		{
-			Source:      "SFO",
-			Destination: "ATL",
-		},
-		{
-			Source:      "GSO",
-			Destination: "IND",
-		},
-		{
-			Source:      "ATL",
-			Destination: "GSO",
-		},
 	}
 }
