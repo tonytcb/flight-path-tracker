@@ -22,7 +22,7 @@ func TestFlightTracker_Track(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "should successfully track a flight list",
+			name: "should successfully track a small flight list",
 			args: args{
 				ctx: context.Background(),
 				flights: []*domain.Flight{
@@ -47,6 +47,18 @@ func TestFlightTracker_Track(t *testing.T) {
 			want: &domain.Flight{
 				Source:      "SFO",
 				Destination: "EWR",
+			},
+			wantErr: false,
+		},
+		{
+			name: "should successfully track a long flight list",
+			args: args{
+				ctx:     context.Background(),
+				flights: longListOfBrazilianFlights(),
+			},
+			want: &domain.Flight{
+				Source:      "CWB",
+				Destination: "VIX",
 			},
 			wantErr: false,
 		},
@@ -77,5 +89,87 @@ func TestFlightTracker_Track(t *testing.T) {
 				t.Errorf("Track() got = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+// source: https://getbybus.com/en/blog/airports-brazil/
+func longListOfBrazilianFlights() domain.Flights {
+	return []*domain.Flight{
+		{
+			Source:      "MGA",
+			Destination: "GRU",
+		},
+		{
+			Source:      "REC",
+			Destination: "CGH",
+		},
+		{
+			Source:      "BSB",
+			Destination: "MGA",
+		},
+		{
+			Source:      "GSO",
+			Destination: "SSA",
+		},
+		{
+			Source:      "CNF",
+			Destination: "ATL",
+		},
+		{
+			Source:      "CGH",
+			Destination: "VCP",
+		},
+		{
+			Source:      "GRU",
+			Destination: "POA",
+		},
+		{
+			Source:      "SSA",
+			Destination: "FOR",
+		},
+		{
+			Source:      "CWB", // first origin
+			Destination: "BEL",
+		},
+		{
+			Source:      "FLN",
+			Destination: "VIX", // final destination
+		},
+		{
+			Source:      "NAT",
+			Destination: "BSB",
+		},
+		{
+			Source:      "VCP",
+			Destination: "CGB",
+		},
+		{
+			Source:      "BEL",
+			Destination: "NAT",
+		},
+		{
+			Source:      "CGB",
+			Destination: "FLN",
+		},
+		{
+			Source:      "ATL",
+			Destination: "GSO",
+		},
+		{
+			Source:      "MCZ",
+			Destination: "REC",
+		},
+		{
+			Source:      "POA",
+			Destination: "IGU",
+		},
+		{
+			Source:      "FOR",
+			Destination: "MCZ",
+		},
+		{
+			Source:      "IGU",
+			Destination: "CNF",
+		},
 	}
 }
