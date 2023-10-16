@@ -29,6 +29,11 @@ func main() {
 		log.Fatalf("error to load env var %s: %v", httpPortEnVarName, err)
 	}
 
+	/**
+	 * To have exactly the same input api provided in the examples (json containing a list of arrays),
+	 * it's easily done change injecting the flightparser.NewJSONOfArraysParser() instead of flightparser.NewJSONParser().
+	 */
+
 	var (
 		flightsCalculatorHandler = http.NewFlightCalculatorHandler(
 			flightparser.NewJSONParser(),

@@ -9,6 +9,7 @@ import (
 	"github.com/tonytcb/flight-path-tracker/pkg/domain"
 )
 
+// JSONParser implements an improved version of the payload provided in the examples, considering a list of objects
 type JSONParser struct {
 }
 
