@@ -59,10 +59,6 @@ As a performant algorithm, it runs on a linear time complexity, O(n).
 }
 ```
 
-### Important
-
-My understanding is that I could design the API inputs and outputs as I want, to improve the interface. Just in case this assumption is wrong, it was implemented a second FlightParser to follow exactly the input described in the original documentation, see [here](./pkg/infra/flightparser/jsonofarraysparser.go). It is awesome to show how easy is change such behavior just implementing the interface and injecting it into our API.
-
 ## Commands
 
 - `make help` to see all commands;
